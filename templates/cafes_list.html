@@ -1,0 +1,12 @@
+<div id="cafes-list" class="grid">
+    {% for cafe in cafes %}
+        <div class="cafe-card">
+            <img src="{{ cafe.img_url }}" alt="{{ cafe.name }}">
+            <h3>{{ cafe.name }}</h3>
+            <p>Location: {{ cafe.location }}</p>
+            <p>Seats: {{ cafe.seats }}</p>
+            <p>Coffee Price: {{ cafe.coffee_price }}</p>
+            <a href="{{ cafe.map_url }}" target="_blank">View on Map</a>
+        </div>
+    {% endfor %}
+</div>

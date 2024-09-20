@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cafe Finder by Siris</title>
+    <style>
+        /* Global styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            height: 100vh; /* Full height view */
+        }
+
+        .container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 20px;
+        }
+
+        /* Specific column styles */
+        .filters-column {
+            width: 33%;
+            background-color: #b3e5fc;
+        }
+
+        .cafes-column {
+            width: 34%;
+            background-color: #ffe0b2;
+            overflow-y: auto;
+        }
+
+        .map-column {
+            width: 33%;
+            background-color: #e1bee7;
+        }
+
+        /* Separator styles */
+        .separator {
+            width: 1px;
+            background-color: black;
+        }
+
+        /* Additional styling for cafe finder sections */
+        h2 {
+            text-align: left;
+            width: 100%;
+        }
+
+        form {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            width: 100%;
+        }
+
+        .form-section {
+            grid-column: span 3;
+            margin: 20px 0 10px 0; /* Adds space above the section header */
+            font-weight: bold;
+            text-align: left;
+        }
+
+        form label {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+        }
+
+        .cafes-list {
+            width: 100%;
+            text-align: left;
+        }
+
+        .cafe-card {
+            padding: 15px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            background-color: white;
+            display: flex; /* Use flexbox for layout */
+            justify-content: space-between;
+            align-items: flex-start; /* Align items at the top */
+            flex-wrap: wrap; /* Allow wrap for responsiveness */
+        }
+
+        .cafe-card-content {
+            flex: 1; /* Content takes the available space */
+            margin-right: 15px; /* Add spacing between text and image */
+        }
+
+        .cafe-img {
+            flex-shrink: 0; /* Prevent the image from shrinking */
+        }
+
+        .cafe-img img {
+            max-width: 180px; /* Adjust size as needed */
+            height: auto;
+            border-radius: 5px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .filters-column, .cafes-column, .map-column {
+                width: 100%;
+                height: auto;
+            }
+
+            .cafe-card {
+                flex-direction: column; /* Stack text and image vertically on small screens */
+            }
+
+            .cafe-img {
+                margin-top: 15px;
+            }
+
+            iframe {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- Left Column: Filters -->
+    <div class="column filters-column">
+        <h2>Filters</h2>
+        <form id="filter-form">
+            <!-- Productivity Section -->
+            <div class="form-section">Productivity</div>
+            <label><input type="checkbox" name="wifi"> Wi-Fi</label>
+            <label><input type="checkbox" name="sockets"> Electric sockets</label>
+            <label><input type="checkbox" name="calls"> Can Take Calls</label>
+            <label><input type="checkbox" name="long_stays"> Long Stays</label>
+            <label><input type="checkbox" name="tables"> Tables</label>
+            <label><input type="checkbox" name="quiet"> Quiet</label>
+
+            <!-- Community Section -->
+            <div class="form-section">Community</div>
+            <label><input type="checkbox" name="work_vibe"> Work vibe</label>
+            <label><input type="checkbox" name="groups"> Groups</label>
+
+            <!-- Service Section -->
+            <div class="form-section">Service</div>
+            <label><input type="checkbox" name="coffee"> Coffee</label>
+            <label><input type="checkbox" name="food"> Food</label>
+            <label><input type="checkbox" name="veggie"> Veggie</label>
+            <label><input type="checkbox" name="alcohol"> Alcohol</label>
+            <label><input type="checkbox" name="cards"> Accepts cards</label>
+
+            <!-- Space Section -->
+            <div class="form-section">Space</div>
+            <label><input type="checkbox" name="light"> Light</label>
+            <label><input type="checkbox" name="outdoor"> Outdoor</label>
+            <label><input type="checkbox" name="spacious"> Spacious</label>
+            <label><input type="checkbox" name="restroom"> Restroom</label>
+            <label><input type="checkbox" name="accessible"> Accessible</label>
+            <label><input type="checkbox" name="ac"> A/C</label>
+            <label><input type="checkbox" name="pets"> Pets</label>
+            <label><input type="checkbox" name="parking"> Parking</label>
+        </form>
+    </div>
+
+    <div class="separator"></div> <!-- First separator -->
+
+    <!-- Middle Column: Cafe List -->
+    <div class="column cafes-column">
+        <h2>Available Cafes</h2>
+        <div class="cafes-list" id="cafes-list">
+            <!-- Cafe cards will be populated here -->
+        </div>
+    </div>
+
+    <div class="separator"></div> <!-- Second separator -->
+
+    <!-- Right Column: Google Map -->
+    <div class="column map-column">
+        <h2>Map of London</h2>
+        <!-- Embed Google Maps with a draggable map -->
+        <iframe
+            width="100%"
+            height="400px"
+            frameborder="0"
+            style="border:0"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d24117.647470747664!2d-0.1276472!3d51.5073219!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x48761b3341e81a4f%3A0x2f5a45cd473d9218!2sLondon!5e0!3m2!1sen!2suk!4v1632828652755!5m2!1sen!2suk"
+            allowfullscreen>
+        </iframe>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const cafes = {{ cafes|tojson }}; // Use Jinja to pass cafes data to JavaScript
+
+        const filterForm = document.getElementById('filter-form');
+        const cafesList = document.getElementById('cafes-list');
+
+        // Function to render the cafes dynamically
+        const renderCafes = (cafes) => {
+            cafesList.innerHTML = ''; // Clear the list
+            cafes.forEach(cafe => {
+                const cafeCard = `
+                    <div class="cafe-card">
+                        <div class="cafe-card-content">
+                            <h3>${cafe.name}</h3>
+                            <p>Location: ${cafe.location}</p>
+                            <p>Seats: ${cafe.seats}</p>
+                            <p>Wi-Fi: ${cafe.has_wifi ? 'Yes' : 'No'}</p>
+                            <p>Electric sockets: ${cafe.has_sockets ? 'Yes' : 'No'}</p>
+                            <p>Toilet: ${cafe.has_toilet ? 'Yes' : 'No'}</p>
+                            <p>Can Take Calls: ${cafe.can_take_calls ? 'Yes' : 'No'}</p>
+                            <p>Coffee Price: ${cafe.coffee_price}</p>
+                        </div>
+                        <div class="cafe-img">
+                            <img src="${cafe.img_url}" alt="${cafe.name}">
+                        </div>
+                    </div>
+                `;
+                cafesList.innerHTML += cafeCard;
+            });
+        };
+
+        // Initial render of all cafes
+        renderCafes(cafes);
+
+        // Function to filter cafes based on selected checkboxes
+        const filterCafes = () => {
+            const selectedFilters = new FormData(filterForm);
+            const filteredCafes = cafes.filter(cafe => {
+                return (!selectedFilters.get('wifi') || cafe.has_wifi) &&
+                       (!selectedFilters.get('sockets') || cafe.has_sockets) &&
+                       (!selectedFilters.get('calls') || cafe.can_take_calls) &&
+                       (!selectedFilters.get('restroom') || cafe.has_toilet);
+            });
+            renderCafes(filteredCafes);
+        };
+
+        // Attach event listener to all checkboxes to update the cafe list on change
+        filterForm.addEventListener('change', filterCafes);
+    });
+</script>
+
+</body>
+</html>
